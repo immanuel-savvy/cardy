@@ -1,7 +1,7 @@
 import React from 'react';
 import {StatusBar} from 'react-native';
 import Bg_view from '../Components/Bg_view';
-import Fr_text from '../components/fr_text';
+import Fr_text from '../Components/Fr_text';
 
 class Splash extends React.Component {
   constructor(props) {

@@ -9,11 +9,10 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {StatusBar} from 'react-native';
 import Splash from './src/Screens/splash';
 //
-import Emitter from './src/utils/emitter';
-import Signup from './src/Screens/Signup';
-import Login from './src/Screens/Login';
-import Account from './src/Screens/Account';
-import Login_et_signup from './src/Screens/Login_et_signup';
+import Emitter from 'semitter';
+import Login from './src/Screens/login';
+import Account from './src/Screens/account';
+import Login_et_signup from './src/Screens/login_et_signup';
 import Registration from './src/Screens/registration';
 import Verification from './src/Screens/verification';
 import Congratulation from './src/Screens/congratulation';
@@ -35,16 +34,6 @@ const Auth_stack = createStackNavigator();
 const App_stack = createStackNavigator();
 
 const Bottom_tab = createBottomTabNavigator();
-
-const Admin_id = 'users~platform_user~3000';
-
-let sock;
-
-const Sock_offer_status = (offer, status, user) => {
-  let payload = {offer, status};
-
-  sock && sock.emit('offer_status', {user, payload});
-};
 
 class Auth extends React.Component {
   constructor(props) {
@@ -68,7 +57,6 @@ class Auth extends React.Component {
           animationEnabled: true,
         }}>
         <Auth_stack.Screen name="login_et_signup" component={Login_et_signup} />
-        <Auth_stack.Screen name="signup" component={Signup} />
         <Auth_stack.Screen name="registration" component={Registration} />
         <Auth_stack.Screen name="verification" component={Verification} />
         <Auth_stack.Screen name="congratulation" component={Congratulation} />

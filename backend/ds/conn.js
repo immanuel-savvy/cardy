@@ -1,15 +1,15 @@
-import GDS from "generalised-datastore";
+import GDS from 'generalised-datastore';
 
 let gds;
 
 let USERS, USERS_HASH;
 
 const ds_conn = () => {
-  gds = new GDS("neovacity").sync();
+  gds = new GDS('cardy_mock').sync();
 
-  USERS = gds.folder("users");
-  USERS_HASH = gds.folder("user_hash", "user");
+  USERS = gds.folder('users');
+  USERS_HASH = gds.folder('user_hash', 'user');
 };
 
-export { gds, USERS, USERS_HASH };
+export {gds, USERS, USERS_HASH};
 export default ds_conn;
