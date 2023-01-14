@@ -11,7 +11,7 @@ import Splash from './src/Screens/splash';
 //
 import Emitter from 'semitter';
 import Login from './src/Screens/login';
-import Account from './src/Screens/account';
+import Account from './src/Screens/Account';
 import Login_et_signup from './src/Screens/login_et_signup';
 import Registration from './src/Screens/registration';
 import Verification from './src/Screens/verification';
@@ -168,7 +168,7 @@ class Cardy extends React.Component {
   };
 
   render = () => {
-    let {logged, user, signed_out} = this.state;
+    let {logged, user, init_screen, signed_out} = this.state;
 
     return (
       <NavigationContainer>
@@ -182,16 +182,7 @@ class Cardy extends React.Component {
             </User.Provider>
           </Bg_view>
         ) : (
-          <Auth
-            onboardings={this.onboardings}
-            init_screen={
-              init_screen
-                ? init_screen
-                : signed_out
-                ? 'login_et_signup'
-                : 'onboarding'
-            }
-          />
+          <Auth />
         )}
       </NavigationContainer>
     );

@@ -1,6 +1,6 @@
 import React from 'react';
 import {KeyboardAvoidingView, ScrollView} from 'react-native';
-import {emitter} from '../../Udara';
+import {emitter} from '../../Cardy';
 import Bg_view from '../Components/Bg_view';
 import Fr_text from '../Components/Fr_text';
 import Stretched_button from '../Components/Stretched_button';
@@ -107,4 +107,3 @@ class Login extends React.Component {
 }
 
 export default Login;
-export {default_country_code};

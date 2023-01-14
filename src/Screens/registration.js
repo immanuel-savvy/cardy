@@ -99,4 +99,3 @@ class Registration extends React.Component {
 }
 
 export default Registration;
-export {set_phone_et_country_code};
