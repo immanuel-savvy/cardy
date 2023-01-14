@@ -8,16 +8,10 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {StatusBar} from 'react-native';
 import Splash from './src/Screens/splash';
-import Onboarding from './src/Screens/onboarding';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import io from 'socket.io-client';
-
 //
 import Emitter from './src/utils/emitter';
 import Signup from './src/Screens/Signup';
 import Login from './src/Screens/Login';
-import Wallet from './src/Screens/Wallet';
-import Market from './src/Screens/Market';
 import Account from './src/Screens/Account';
 import Login_et_signup from './src/Screens/Login_et_signup';
 import Registration from './src/Screens/registration';
@@ -25,28 +19,12 @@ import Verification from './src/Screens/verification';
 import Congratulation from './src/Screens/congratulation';
 import {hp, wp} from './src/utils/dimensions';
 import Bg_view from './src/Components/Bg_view';
-import Icon from './src/Components/Icon';
-import {get_request, post_request, sock_domain} from './src/utils/services';
-import toast from './src/utils/toast';
-import Update_username from './src/Screens/update_username';
-import Change_password from './src/Screens/change_password';
-import Update_phone from './src/Screens/update_phone';
 import Privacy_policy from './src/Screens/privacy_policy';
-import Sell from './src/Screens/Sell';
-import Onsale_details from './src/Screens/Onsale_details';
-import Offers from './src/Screens/offers';
-import Chat from './src/Screens/Chat';
-import Update_email from './src/Screens/update_email';
-import Submit_dispute from './src/Screens/submit_dispute';
-import Dispute from './src/Screens/dispute';
-import Disputes from './src/Screens/disputes';
-import Generate_account_number from './src/Screens/generate_account_number';
-import Buyer_offers from './src/Screens/Buyer_offers';
-import Notifications from './src/Screens/notifications';
 import Home from './src/Screens/Home';
-import Account_verification from './src/Screens/Account_verification';
-import Verification_details from './src/Screens/veirification_details';
-import Verification_requests from './src/Screens/verification_requests';
+import Feather from 'react-native-vector-icons/Feather';
+import {get_request} from './src/utils/services';
+import toast from './src/utils/toast';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const User = React.createContext();
 
@@ -72,13 +50,13 @@ class Auth extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {init_screen: 'onboarding'};
+    this.state = {init_screen: 'login_et_signup'};
   }
 
   componentDidMount = () => {};
 
   render = () => {
-    let {onboardings, init_screen} = this.props;
+    let {init_screen} = this.props;
 
     return (
       <Auth_stack.Navigator
@@ -89,11 +67,6 @@ class Auth extends React.Component {
           gestureEnabled: true,
           animationEnabled: true,
         }}>
-        <Auth_stack.Screen
-          name="onboarding"
-          component={Onboarding}
-          initialParams={{onboardings}}
-        />
         <Auth_stack.Screen name="login_et_signup" component={Login_et_signup} />
         <Auth_stack.Screen name="signup" component={Signup} />
         <Auth_stack.Screen name="registration" component={Registration} />
@@ -111,34 +84,10 @@ class Index extends React.Component {
 
     let {route} = this.props;
 
-    this.state = {
-      unseen_notifications: route.params?.user?.new_notification || 0,
-    };
+    this.state = {};
   }
 
-  componentDidMount = () => {
-    this.new_notification = () => {
-      let {unseen_notifications} = this.state;
-      unseen_notifications++;
-      this.setState({unseen_notifications});
-    };
-
-    this.seen_notification = () => {
-      this.setState({unseen_notifications: 0});
-    };
-
-    emitter.listen('new_notification', this.new_notification);
-    emitter.listen('seen_notification', this.seen_notification);
-  };
-
-  componentWillUnmount = () => {
-    emitter.remove_listener('new_notification', this.new_notification);
-    emitter.remove_listener('seen_notification', this.seen_notification);
-  };
-
   render = () => {
-    let {unseen_notifications} = this.state;
-
     return (
       <Bottom_tab.Navigator
         initialRouteName="home"
@@ -159,50 +108,7 @@ class Index extends React.Component {
           options={{
             tabBarLabel: 'Home',
             tabBarIcon: ({color, size}) => (
-              <Icon
-                icon="home_icon.png"
-                style={{height: wp(7), width: wp(7)}}
-              />
-            ),
-          }}
-        />
-        <Bottom_tab.Screen
-          name="wallet"
-          component={Wallet}
-          options={{
-            tabBarLabel: 'Wallet',
-            tabBarIcon: ({color, size}) => (
-              <Icon
-                icon="wallet_icon.png"
-                style={{height: wp(7), width: wp(7)}}
-              />
-            ),
-          }}
-        />
-        <Bottom_tab.Screen
-          name="market"
-          component={Market}
-          options={{
-            tabBarLabel: 'Market',
-            tabBarIcon: ({color, size}) => (
-              <Icon
-                icon="market_icon.png"
-                style={{height: wp(7), width: wp(7)}}
-              />
-            ),
-          }}
-        />
-        <Bottom_tab.Screen
-          name="notifications"
-          component={Notifications}
-          options={{
-            tabBarLabel: 'Notifications',
-            tabBarBadge: unseen_notifications || undefined,
-            tabBarIcon: ({color, size}) => (
-              <Icon
-                icon="notification_icon.png"
-                style={{height: wp(7), width: wp(7)}}
-              />
+              <Feather name="home" style={{height: wp(7), width: wp(7)}} />
             ),
           }}
         />
@@ -212,10 +118,7 @@ class Index extends React.Component {
           options={{
             tabBarLabel: 'Account',
             tabBarIcon: ({color, size}) => (
-              <Icon
-                icon="account_icon.png"
-                style={{height: wp(7), width: wp(7)}}
-              />
+              <Feather name="user" style={{height: wp(7), width: wp(7)}} />
             ),
           }}
         />
@@ -238,7 +141,7 @@ class App extends React.Component {
         screenOptions={{
           headerShown: false,
           keyboardHandlingEnabled: true,
-          // gestureEnabled: true,
+          gestureEnabled: true,
           animationEnabled: true,
         }}>
         <App_stack.Screen
@@ -246,49 +149,35 @@ class App extends React.Component {
           initialParams={{user}}
           component={Index}
         />
-        <App_stack.Screen name="change_password" component={Change_password} />
-        <App_stack.Screen name="update_phone" component={Update_phone} />
-        <App_stack.Screen name="update_email" component={Update_email} />
-        <App_stack.Screen name="sell" component={Sell} />
-        <App_stack.Screen name="onsale_details" component={Onsale_details} />
-        <App_stack.Screen name="offers" component={Offers} />
-        <App_stack.Screen name="submit_dispute" component={Submit_dispute} />
-        <App_stack.Screen name="dispute" component={Dispute} />
-        <App_stack.Screen
-          name="verification_requests"
-          component={Verification_requests}
-        />
-        <App_stack.Screen
-          name="verification_details"
-          component={Verification_details}
-        />
-        <App_stack.Screen
-          name="account_verification"
-          component={Account_verification}
-        />
-        <App_stack.Screen name="disputes" component={Disputes} />
-        <App_stack.Screen name="chat" component={Chat} />
-        <App_stack.Screen name="buyer_offers" component={Buyer_offers} />
-        <App_stack.Screen
-          name="generate_account_number"
-          component={Generate_account_number}
-        />
-        <App_stack.Screen name="update_username" component={Update_username} />
-        <App_stack.Screen name="verification" component={Verification} />
         <App_stack.Screen name="privacy_policy" component={Privacy_policy} />
       </App_stack.Navigator>
     );
   };
 }
 
-class Udara extends React.Component {
+class Cardy extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {logged: 'fetching'};
   }
 
-  componentDidMount = async () => {};
+  componentDidMount = async () => {
+    let user = await AsyncStorage.getItem('user');
+    if (!user) {
+      let signed_out = await AsyncStorage.getItem('signed_out');
+      this.setState({logged: false, signed_out});
+    } else {
+      let result = await get_request(`user_refresh/${user}`);
+      if (result) {
+        this.setState({user: result.user, logged: true});
+        await AsyncStorage.setItem('user', result.user._id);
+      } else {
+        this.setState({logged: false, signed_out: true});
+        toast('Cannot fetch user from server.');
+      }
+    }
+  };
 
   render = () => {
     let {logged, user, signed_out} = this.state;
@@ -321,5 +210,5 @@ class Udara extends React.Component {
   };
 }
 
-export default Udara;
-export {emitter, User, Admin_id, Sock_offer_status, sock};
+export default Cardy;
+export {emitter, User};
