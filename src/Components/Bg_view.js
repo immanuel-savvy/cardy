@@ -1,5 +1,6 @@
 import React from 'react';
 import {View} from 'react-native';
+import {green} from '../Screens/splash';
 
 class Bg_view extends React.Component {
   constructor(props) {
@@ -25,7 +26,7 @@ class Bg_view extends React.Component {
       style.elevation = 5;
     }
     if (flex) style.flex = 1;
-    if (accent) style.backgroundColor = '#FF6905';
+    if (accent) style.backgroundColor = green;
     if (horizontal) {
       style.flexDirection = 'row';
       if (!no_centralise) style.alignItems = 'center';

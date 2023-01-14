@@ -16,7 +16,7 @@ class Login extends React.Component {
     super(props);
 
     this.state = {
-      email,
+      email: '',
       password: '',
     };
   }
@@ -85,7 +85,7 @@ class Login extends React.Component {
 
                 <Text_input
                   value={password}
-                  label={new_user ? 'create your password' : 'password'}
+                  label={'password'}
                   secure={!reveal_password}
                   placeholder="type your password"
                   on_change_text={this.set_password}

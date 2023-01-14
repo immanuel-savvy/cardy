@@ -1,5 +1,6 @@
 import React from 'react';
 import {TouchableWithoutFeedback, View} from 'react-native';
+import {green} from '../Screens/splash';
 import {hp, wp} from '../utils/dimensions';
 import Bg_view from './Bg_view';
 import Fr_text from './Fr_text';
@@ -42,19 +43,14 @@ class Stretched_button extends React.Component {
                 elevation: 10,
                 shadowColor: '#000',
                 borderWidth: inverted ? 1.5 : null,
-                borderColor: inverted
-                  ? disabled
-                    ? '#DBD8DA'
-                    : '#FF6200'
-                  : null,
+                borderColor: inverted ? (disabled ? '#DBD8DA' : green) : null,
               }}>
               <Fr_text
                 bold
                 size={wp(4)}
                 caps={caps}
                 capitalise
-                color="#fff"
-                accent={inverted}>
+                color={inverted ? green : '#fff'}>
                 {title}
               </Fr_text>
               {loading ? (

@@ -152,23 +152,29 @@ class Cardy extends React.Component {
 
   componentDidMount = async () => {
     let user = await AsyncStorage.getItem('user');
+
     if (!user) {
-      let signed_out = await AsyncStorage.getItem('signed_out');
-      this.setState({logged: false, signed_out});
+      this.setState({logged: false});
     } else {
-      let result = await get_request(`user_refresh/${user}`);
+      user = JSON.parse(user);
+      this.setState({logged: true, user});
+      let result = await get_request(`user_refresh/${user._id}`);
       if (result) {
-        this.setState({user: result.user, logged: true});
-        await AsyncStorage.setItem('user', result.user._id);
-      } else {
-        this.setState({logged: false, signed_out: true});
-        toast('Cannot fetch user from server.');
+        this.setState({user: result.user});
+        await AsyncStorage.setItem('user', JSON.stringify(result.user));
       }
     }
+
+    this.user_registered = async user => {
+      await AsyncStorage.setItem('user', JSON.stringify(user));
+      this.setState({user});
+    };
+
+    emitter.listen('user_registered', this.user_registered);
   };
 
   render = () => {
-    let {logged, user, init_screen, signed_out} = this.state;
+    let {logged, user} = this.state;
 
     return (
       <NavigationContainer>

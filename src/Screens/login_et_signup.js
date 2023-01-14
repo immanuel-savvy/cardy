@@ -4,6 +4,7 @@ import Bg_view from '../Components/Bg_view';
 import Fr_text from '../Components/Fr_text';
 import Stretched_button from '../Components/Stretched_button';
 import {hp, wp} from '../utils/dimensions';
+import {green} from './splash';
 
 class Login_et_signup extends React.Component {
   constructor(props) {
@@ -23,7 +24,9 @@ class Login_et_signup extends React.Component {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <Fr_text>Cardy</Fr_text>
+          <Fr_text size={wp(6.5)} bold>
+            Cardy
+          </Fr_text>
           <Bg_view
             style={{
               elevation: 10,
@@ -33,6 +36,7 @@ class Login_et_signup extends React.Component {
               justifyContent: 'center',
               borderRadius: wp(5.6),
               marginHorizontal: wp(5.6),
+              marginTop: hp(2.8),
             }}>
             <Stretched_button
               capitalise
