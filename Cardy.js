@@ -22,7 +22,6 @@ import Privacy_policy from './src/Screens/privacy_policy';
 import Home from './src/Screens/Home';
 import Feather from 'react-native-vector-icons/Feather';
 import {get_request} from './src/utils/services';
-import toast from './src/utils/toast';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const User = React.createContext();

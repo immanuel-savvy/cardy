@@ -13,8 +13,8 @@ import {email_regex} from '../utils/functions';
 import Feather from 'react-native-vector-icons/Feather';
 import {purple} from './splash';
 import {post_request} from '../utils/services';
-import emitter from 'semitter';
 import toast from '../utils/toast';
+import {emitter} from '../../Cardy';
 
 class Registration extends React.Component {
   constructor(props) {
@@ -48,7 +48,7 @@ class Registration extends React.Component {
     this.setState({loading: true});
 
     let user = {
-      email,
+      email: email.trim().toLowerCase(),
       password,
       firstname,
       lastname,
@@ -56,12 +56,14 @@ class Registration extends React.Component {
 
     let res = await post_request('register_user', user);
 
+    console.log(res);
+
     this.setState({loading: false});
     if (res && res._id) {
       emitter.emit('user_registered', user);
 
-      navigation.navigate('verification', user);
-    } else toast('Err, something went wrong.');
+      this.props.navigation.navigate('verification', user);
+    } else toast((res && res.message) || 'Err, something went wrong.');
   };
 
   render = () => {

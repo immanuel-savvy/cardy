@@ -1,6 +1,9 @@
 import {USERS, USERS_HASH} from '../ds/conn';
 import {generate_random_string} from '../utils/functions';
 import {verification} from './email';
+import nodemailer from 'nodemailer';
+
+const pending_otps = new Object();
 
 const send_mail = ({
   recipient,
@@ -43,7 +46,9 @@ const send_mail = ({
   }
 };
 
-const request_otp = async email => {
+const request_otp = async (email, res) => {
+  if (typeof email !== 'string') email = email.body.email;
+
   let code = generate_random_string(6);
   pending_otps[email] = code;
 
@@ -56,7 +61,8 @@ const request_otp = async email => {
     html: verification(code),
   });
 
-  res.json({ok: true, message: 'opt sent', data: email});
+  typeof email !== 'string' &&
+    res.json({ok: true, message: 'opt sent', data: email});
 };
 
 const verify_email = async (req, res) => {
@@ -133,4 +139,11 @@ const login = (req, res) => {
   res.json({ok: true, message: user});
 };
 
-export {user_refresh, register_user, verify_email, verify_later, login};
+export {
+  user_refresh,
+  register_user,
+  verify_email,
+  verify_later,
+  request_otp,
+  login,
+};
