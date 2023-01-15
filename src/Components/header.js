@@ -14,11 +14,15 @@ const Header = ({title, close_fn, no_transform, right_btn, navigation}) => {
       style={{alignItems: 'center', paddingVertical: hp(1.4)}}>
       <View style={{flex: 3}}>
         <TouchableWithoutFeedback onPress={close_fn}>
-          <Feather name="arrow-left" size={wp(7.2)} />
+          <Feather
+            name="arrow-left"
+            size={wp(5.6)}
+            style={{marginHorizontal: wp(2.8)}}
+          />
         </TouchableWithoutFeedback>
       </View>
       <View style={{flex: right_btn ? 4 : 7, alignItems: 'center'}}>
-        <Fr_text capitalise={!no_transform} bold size={wp(4.5)}>
+        <Fr_text opacity={0.6} capitalise={!no_transform} bold size={wp(4.5)}>
           {`  ${title}`}
         </Fr_text>
       </View>

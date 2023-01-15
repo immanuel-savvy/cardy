@@ -31,7 +31,7 @@ class Privacy_policy extends React.Component {
             centralise
             accent
             italic
-            text="udaralinks.com"
+            text="cardy.udaralinks.com"
             size={wp(5)}
             action={this.more_info}
           />

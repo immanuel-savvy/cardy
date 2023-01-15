@@ -21,23 +21,25 @@ class Stretched_button extends React.Component {
       caps,
       loading,
       disabled,
+      bg,
+      no_margin,
     } = this.props;
 
     if (loading) disabled = loading;
 
     return (
-      <View style={{margin: wp(5.6), ...style}}>
+      <View style={{margin: no_margin ? null : wp(5.6), ...style}}>
         <TouchableWithoutFeedback
           onPress={disabled ? null : action}
           disabled={disabled}>
           <View>
             <Bg_view
               accent={!inverted && !disabled}
-              background_color={disabled ? '#ccc' : null}
+              background_color={disabled ? '#ccc' : bg || null}
               horizontal
               style={{
                 height: hp(7.5),
-                borderRadius: border_radius || wp(5.6),
+                borderRadius: border_radius || wp(2.8),
                 alignItems: 'center',
                 justifyContent: 'center',
                 elevation: 10,

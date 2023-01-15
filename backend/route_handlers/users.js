@@ -71,7 +71,12 @@ const verify_email = async (req, res) => {
   let otp_code = pending_otps[email];
   delete pending_otps[email];
 
-  if (otp_code === code) {
+  console.log(code, otp_code);
+
+  if (
+    String(otp_code).trim() &&
+    String(otp_code).trim() === String(code).trim()
+  ) {
     user = USERS.update({_id: user}, {verified: true});
 
     res.json({
@@ -112,12 +117,16 @@ const register_user = async (req, res) => {
   delete user.password;
 
   let email_used = USERS.readone({email: user.email});
-  if (email_used) {
+  if (email_used && email_used.verified !== undefined) {
     return res.json({ok: false, data: {message: 'email has been used.'}});
   }
 
-  let result = USERS.write(user);
-  USERS_HASH.write({password, user: result._id});
+  let result;
+  if (email_used) result = email_used;
+  else {
+    result = USERS.write(user);
+    USERS_HASH.write({password, user: result._id});
+  }
 
   user._id = result._id;
   user.created = result.created;
@@ -130,13 +139,18 @@ const register_user = async (req, res) => {
 const login = (req, res) => {
   let {email, password} = req.body;
 
+  console.log(email, password);
+
   let user = USERS.readone({email});
   if (!user) return res.json({ok: false, data: {message: 'User not found.'}});
   let hash = USERS_HASH.readone({user: user._id, password});
 
-  if (!hash) return res.json({ok: false, data: {message: 'User not found.'}});
+  console.log(user, hash);
 
-  res.json({ok: true, message: user});
+  if (!hash)
+    return res.json({ok: false, data: {message: 'Incorrect password.'}});
+
+  res.json({ok: true, data: {user}});
 };
 
 export {

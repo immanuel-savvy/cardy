@@ -9,6 +9,8 @@ import Stretched_button from '../Components/Stretched_button';
 import {hp, wp} from '../utils/dimensions';
 import {post_request} from '../utils/services';
 import toast from '../utils/toast';
+import {purple} from './splash';
+import Text_btn from '../Components/Text_btn';
 
 class Verification extends React.Component {
   constructor(props) {
@@ -29,26 +31,27 @@ class Verification extends React.Component {
 
   verify_later = () => this.setState({verify_later: true}, this.verify);
 
+  set_do_it_later = () => this.setState({do_it_later: true}, this.verify);
+
   verify = async () => {
     let {navigation, route} = this.props;
     let {email} = route.params;
+    let {do_it_later} = this.state;
 
     this.setState({loading: true});
     let {code} = this.state;
 
-    let verified = await post_request('verify_otp', {
-      email,
-      code,
-    });
+    let verified =
+      do_it_later ||
+      (await post_request('verify_email', {
+        email,
+        code,
+      }));
 
     this.setState({loading: false});
-    if (verified.user) {
-      emitter.emit('verified', {...verified});
+    if (verified.user || do_it_later) {
+      emitter.emit('on_verification', verified);
       navigation.pop();
-      navigation.navigate('congratulation', {
-        email,
-        user: verified.user._id,
-      });
     } else {
       toast('Verification  failed');
       navigation.goBack();
@@ -63,7 +66,12 @@ class Verification extends React.Component {
       <Bg_view flex>
         <KeyboardAvoidingView style={{flex: 1}}>
           <ScrollView showVerticalScrollIndicator={false}>
-            <Bg_view style={{alignItems: 'center'}}>
+            <Bg_view
+              style={{
+                alignItems: 'center',
+                height: hp(),
+                justifyContent: 'center',
+              }}>
               <Fr_text bold="900" size={wp(7)} color="#28100B">
                 Verification
               </Fr_text>
@@ -105,16 +113,15 @@ class Verification extends React.Component {
                   }}>
                   <TextInput
                     placeholder="_ _ _ _ _ _"
-                    keyboardType="email-pad"
+                    keyboardType="decimal-pad"
                     placeholderTextColor="#ccc"
                     onChangeText={this.set_code}
                     value={String(code)}
                     style={{
                       flex: 1,
-                      fontSize: wp(4.5),
-                      color: '#28100B',
+                      fontSize: wp(5),
+                      color: purple,
                       marginRight: wp(1.4),
-                      fontWeight: 'bold',
                       textAlign: 'center',
                     }}
                   />
@@ -127,6 +134,14 @@ class Verification extends React.Component {
                   style={{marginHorizontal: 0, marginTop: hp(4)}}
                   action={this.verify}
                 />
+
+                <Bg_view style={{alignItems: 'center'}}>
+                  <Text_btn
+                    text="Do this later"
+                    centralise
+                    action={this.set_do_it_later}
+                  />
+                </Bg_view>
               </Bg_view>
               {doing_later ? null : (
                 <Otp_counter resend_otp={this.resend_otp} />

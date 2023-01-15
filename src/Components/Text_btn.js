@@ -16,8 +16,9 @@ const Text_btn = ({
   accent,
   italic,
   icon,
+  color,
 }) => (
-  <TouchableNativeFeedback disabled={disabled} onPress={action}>
+  <TouchableNativeFeedback disabled={disabled || !action} onPress={action}>
     <View
       style={{
         flexDirection: 'row',
@@ -28,10 +29,11 @@ const Text_btn = ({
       {icon ? <Feather name="icon" size={size || wp(5)} /> : null}
       <Fr_text
         centralise={centralise}
-        accent={accent}
+        accent={!color && accent}
         size={size}
         capitalise={capitalise}
         italic={italic}
+        color={color}
         bold={bold}>
         {text}
       </Fr_text>

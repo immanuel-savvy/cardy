@@ -22,8 +22,8 @@ class Bg_view extends React.Component {
 
     if (!style) style = new Object();
     if (shadowed) {
-      style.shadowColor = '#000';
-      style.elevation = 5;
+      style.shadowColor = style.shadowColor || '#000';
+      style.elevation = style.elevation || 5;
     }
     if (flex) style.flex = 1;
     if (accent) style.backgroundColor = green;

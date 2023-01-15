@@ -1,5 +1,9 @@
 import React from 'react';
-import {KeyboardAvoidingView, ScrollView} from 'react-native';
+import {
+  KeyboardAvoidingView,
+  ScrollView,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import {emitter} from '../../Cardy';
 import Bg_view from '../Components/Bg_view';
 import Fr_text from '../Components/Fr_text';
@@ -10,6 +14,7 @@ import {validate_phone} from '../utils/functions';
 import {post_request} from '../utils/services';
 import toast from '../utils/toast';
 import Feather from 'react-native-vector-icons/Feather';
+import {purple} from './splash';
 
 class Login extends React.Component {
   constructor(props) {
@@ -23,7 +28,7 @@ class Login extends React.Component {
 
   componentDidMount = async () => {};
 
-  toggle_reveal_password = () =>
+  toggle_reveal = () =>
     this.setState({reveal_password: !this.state.reveal_password});
 
   set_email = email => this.setState({email});
@@ -39,11 +44,12 @@ class Login extends React.Component {
     this.setState({loading: true});
     let {email, password} = this.state;
 
-    let result = await post_request('logging_in', {email, key: password});
+    let result = await post_request('login', {email, password});
+
     this.setState({loading: false});
     result && result.user
-      ? emitter.emit('logged_in', {user: result.user, wallet: result.wallet})
-      : toast(result);
+      ? emitter.emit('login', result.user)
+      : toast((result && result.message) || 'Err, something went wrong.');
   };
 
   render = () => {
@@ -51,8 +57,8 @@ class Login extends React.Component {
     let {email, password, reveal_password, loading} = this.state;
 
     return (
-      <Bg_view flex>
-        <KeyboardAvoidingView style={{flex: 1}}>
+      <Bg_view flex style={{alignItems: 'center', height: hp()}}>
+        <KeyboardAvoidingView style={{flex: 1, alignItems: 'center'}}>
           <ScrollView showVerticalScrollIndicator={false} style={{flex: 1}}>
             <Bg_view style={{alignItems: 'center'}} flex no_bg>
               <Bg_view
@@ -64,7 +70,7 @@ class Login extends React.Component {
                   justifyContent: 'center',
                   borderRadius: wp(5.6),
                   padding: wp(5.6),
-                  paddingBottom: wp(2.8),
+                  marginHorizontal: wp(2.8),
                   marginVertical: hp(5),
                 }}>
                 <Fr_text
@@ -89,7 +95,15 @@ class Login extends React.Component {
                   secure={!reveal_password}
                   placeholder="type your password"
                   on_change_text={this.set_password}
-                  right_icon={<Feather name="hidden" />}
+                  right_icon={
+                    <TouchableWithoutFeedback onPress={this.toggle_reveal}>
+                      <Feather
+                        name={reveal_password ? 'eye' : 'eye-off'}
+                        size={wp(4.5)}
+                        color={purple}
+                      />
+                    </TouchableWithoutFeedback>
+                  }
                 />
                 <Stretched_button
                   title="login"

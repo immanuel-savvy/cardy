@@ -1,5 +1,6 @@
 import React from 'react';
 import {TextInput} from 'react-native';
+import {purple} from '../Screens/splash';
 import {hp, wp} from '../utils/dimensions';
 import {sentence} from '../utils/functions';
 import Bg_view from './Bg_view';
@@ -54,7 +55,7 @@ class Text_input extends React.Component {
             style={{
               flex: 1,
               fontSize: wp(4.5),
-              color: '#28100B',
+              color: purple,
               marginRight: wp(1.4),
               width: '100%',
               fontWeight: 'bold',

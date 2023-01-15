@@ -7,7 +7,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {StatusBar} from 'react-native';
-import Splash from './src/Screens/splash';
+import Splash, {purple} from './src/Screens/splash';
 //
 import Emitter from 'semitter';
 import Login from './src/Screens/login';
@@ -23,6 +23,8 @@ import Home from './src/Screens/Home';
 import Feather from 'react-native-vector-icons/Feather';
 import {get_request} from './src/utils/services';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Apply_for_rent from './src/Screens/Apply_for_rent';
+import Payment_breakdown from './src/Screens/Payment_breakdown';
 
 const User = React.createContext();
 
@@ -81,7 +83,7 @@ class Index extends React.Component {
         backBehavior="initialRoute"
         screenOptions={{
           headerShown: false,
-          tabBarActiveTintColor: '#FF6905',
+          tabBarActiveTintColor: purple,
           tabBarInactiveTintColor: '#858597',
           tabBarStyle: {
             height: hp(9),
@@ -95,7 +97,7 @@ class Index extends React.Component {
           options={{
             tabBarLabel: 'Home',
             tabBarIcon: ({color, size}) => (
-              <Feather name="home" style={{height: wp(7), width: wp(7)}} />
+              <Feather name="home" color={color} size={size} />
             ),
           }}
         />
@@ -105,7 +107,7 @@ class Index extends React.Component {
           options={{
             tabBarLabel: 'Account',
             tabBarIcon: ({color, size}) => (
-              <Feather name="user" style={{height: wp(7), width: wp(7)}} />
+              <Feather name="user" color={color} size={size} />
             ),
           }}
         />
@@ -136,6 +138,11 @@ class App extends React.Component {
           initialParams={{user}}
           component={Index}
         />
+        <App_stack.Screen name="apply_for_rent" component={Apply_for_rent} />
+        <App_stack.Screen
+          name="payment_breakdown"
+          component={Payment_breakdown}
+        />
         <App_stack.Screen name="privacy_policy" component={Privacy_policy} />
       </App_stack.Navigator>
     );
@@ -158,9 +165,10 @@ class Cardy extends React.Component {
       user = JSON.parse(user);
       this.setState({logged: true, user});
       let result = await get_request(`user_refresh/${user._id}`);
-      if (result) {
-        this.setState({user: result.user});
-        await AsyncStorage.setItem('user', JSON.stringify(result.user));
+
+      if (result && result._id) {
+        this.setState({user: result});
+        await AsyncStorage.setItem('user', JSON.stringify(result));
       }
     }
 
@@ -169,7 +177,32 @@ class Cardy extends React.Component {
       this.setState({user});
     };
 
+    this.on_verification = async verified => {
+      this.setState({logged: true});
+
+      let user = await AsyncStorage.getItem('user');
+      if (user) {
+        user = JSON.parse(user);
+        user.verified = !!verified;
+        await AsyncStorage.setItem('user', JSON.stringify(user));
+      }
+    };
+
+    this.signout = async () => {
+      this.setState({logged: false, user: null});
+      await AsyncStorage.removeItem('user');
+    };
+
+    this.login = async user => {
+      this.setState({user, logged: true});
+
+      await AsyncStorage.setItem('user', JSON.stringify(user));
+    };
+
     emitter.listen('user_registered', this.user_registered);
+    emitter.listen('on_verification', this.on_verification);
+    emitter.listen('signout', this.signout);
+    emitter.listen('login', this.login);
   };
 
   render = () => {

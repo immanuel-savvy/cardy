@@ -37,6 +37,8 @@ const format_time = time => {
 };
 
 const sentence = text => {
+  if (!text) return text;
+
   let index;
   for (let t = 0; t < text.length; t++) {
     if (combinations.alpha.includes(text[t].toLowerCase())) {
